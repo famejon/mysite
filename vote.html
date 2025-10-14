@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ovoz berish – Quvasoy Ixtisoslashtirilgan maktabi</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo-removebg-preview.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e8f5e8 100%);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .animate-slide-down {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        .animate-bounce-slow {
+            animation: bounceSlow 3s ease-in-out infinite;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.dark {
+            background: rgba(31, 41, 55, 0.95);
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .dark .logo-text p {
+            color: #9ca3af;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark .theme-toggle {
+            color: #fbbf24;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+        }
+
+        .dark .mobile-menu-btn {
+            color: #d1d5db;
+        }
+
+        .mobile-nav {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: #4b5563;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .mobile-nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .mobile-nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .dark .page-subtitle {
+            color: #9ca3af;
+        }
+
+        /* Container */
+        .container {
+            background: white;
+            border-radius: 1rem;
+            padding: 2rem;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .container:hover {
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .container {
+            background: #374151;
+            border: 1px solid #4b5563;
+        }
+
+        .section-title {
+            font-size: 1.75rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .dark .section-title {
+            color: white;
+        }
+
+        /* Candidate Cards */
+        .candidate-option {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1.5rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 1rem;
+            margin-bottom: 1rem;
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .candidate-option::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            transform: scaleX(0);
+            transition: transform 0.3s ease;
+        }
+
+        .candidate-option:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.15);
+            border-color: #3b82f6;
+        }
+
+        .candidate-option:hover::before {
+            transform: scaleX(1);
+        }
+
+        .dark .candidate-option {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            border-color: #6b7280;
+        }
+
+        .dark .candidate-option:hover {
+            border-color: #60a5fa;
+        }
+
+        .candidate-info {
+            flex: 1;
+        }
+
+        .candidate-name {
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark .candidate-name {
+            color: white;
+        }
+
+        .candidate-details {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .candidate-detail {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: #6b7280;
+            font-size: 0.875rem;
+        }
+
+        .dark .candidate-detail {
+            color: #9ca3af;
+        }
+
+        .candidate-photo {
+            width: 80px;
+            height: 80px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid white;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            transition: all 0.3s ease;
+        }
+
+        .candidate-option:hover .candidate-photo {
+            transform: scale(1.1);
+            border-color: #3b82f6;
+        }
+
+        /* Form Styles */
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .dark .form-label {
+            color: #d1d5db;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            background: white;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .dark .form-input {
+            background: #4b5563;
+            border-color: #6b7280;
+            color: white;
+        }
+
+        .dark .form-input:focus {
+            border-color: #60a5fa;
+            box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.1);
+        }
+
+        /* Radio Button Styles */
+        .radio-option {
+            display: flex;
+            align-items: center;
+            padding: 1rem;
+            border: 2px solid #e5e7eb;
+            border-radius: 0.75rem;
+            margin-bottom: 0.75rem;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .radio-option:hover {
+            border-color: #3b82f6;
+            background: #f8fafc;
+        }
+
+        .radio-option.selected {
+            border-color: #3b82f6;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+        }
+
+        .dark .radio-option {
+            background: #4b5563;
+            border-color: #6b7280;
+        }
+
+        .dark .radio-option:hover {
+            border-color: #60a5fa;
+            background: #374151;
+        }
+
+        .dark .radio-option.selected {
+            border-color: #60a5fa;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(52, 211, 153, 0.1));
+        }
+
+        .radio-input {
+            width: 1.25rem;
+            height: 1.25rem;
+            margin-right: 0.75rem;
+            accent-color: #3b82f6;
+        }
+
+        .radio-label {
+            font-weight: 500;
+            color: #374151;
+            cursor: pointer;
+        }
+
+        .dark .radio-label {
+            color: #d1d5db;
+        }
+
+        /* Submit Button */
+        .submit-btn {
+            width: 100%;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            padding: 1rem 2rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .submit-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 25px -5px rgba(59, 130, 246, 0.4);
+        }
+
+        .submit-btn:active {
+            transform: translateY(0);
+        }
+
+        .submit-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
+        }
+
+        .submit-btn:hover::before {
+            left: 100%;
+        }
+
+        /* Message Styles */
+        .message {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            padding: 1rem 1.5rem;
+            border: 1px solid #f59e0b;
+            border-radius: 0.75rem;
+            margin-bottom: 1.5rem;
+            text-align: center;
+            font-weight: 500;
+            animation: scaleIn 0.6s ease-out;
+        }
+
+        .message.success {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            border-color: #10b981;
+        }
+
+        .message.error {
+            background: linear-gradient(135deg, #fee2e2, #fecaca);
+            color: #991b1b;
+            border-color: #ef4444;
+        }
+
+        /* View Results Link */
+        .view-results {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1.5rem;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            color: #3b82f6;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+        }
+
+        .view-results:hover {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.3);
+        }
+
+        .dark .view-results {
+            color: #60a5fa;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(52, 211, 153, 0.1));
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .container {
+                padding: 1.5rem;
+            }
+
+            .candidate-option {
+                flex-direction: column;
+                text-align: center;
+                gap: 1rem;
+            }
+
+            .candidate-info {
+                order: 2;
+            }
+
+            .candidate-photo {
+                order: 1;
+                width: 100px;
+                height: 100px;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0 0.5rem;
+            }
+
+            .container {
+                padding: 1rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #1d4ed8, #059669);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <!-- Made QUVASOY IM logo clickable to redirect to /home -->
+            <a href="{{ url_for('home') }}" class="logo" style="text-decoration: none; color: inherit;">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>QUVASOY IM</h1>
+                    <p>Ixtisoslashtirilgan maktab</p>
+                </div>
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="nav-link active">
+                    <i class="fas fa-vote-yea"></i>
+                    <span class="nav-text">Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="nav-text">Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="nav-link">
+                    <i class="fas fa-star"></i>
+                    <span class="nav-text">Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span class="nav-text">Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="nav-text">Yordam</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars" id="menuIcon"></i>
+            </button>
+
+            <div class="mobile-nav" id="mobileNav">
+                <a href="{{ url_for('home') }}" class="mobile-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="mobile-nav-link active">
+                    <i class="fas fa-vote-yea"></i>
+                    <span>Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="mobile-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="mobile-nav-link">
+                    <i class="fas fa-star"></i>
+                    <span>Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Yordam</span>
+                </a>
+                <button class="mobile-nav-link" onclick="toggleTheme()" style="border: none; background: none; width: 100%; text-align: left;">
+                    <i class="fas fa-moon" id="mobileThemeIcon"></i>
+                    <span>Mavzu o'zgartirish</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">🗳Prezidenlik Saylovi</h1>
+            <p class="page-subtitle">Demokratik jarayonda ishtirok eting</p>
+        </div>
+
+        <!-- Candidates Info Section -->
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-users"></i>
+                Nomzodlar haqida ma'lumot
+            </h2>
+            {% for candidate in candidates_info %}
+            <div class="candidate-option" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                <div class="candidate-info">
+                    <div class="candidate-name">{{ candidate.name }}</div>
+                    <div class="candidate-details">
+                        <div class="candidate-detail">
+                            <i class="fas fa-user"></i>
+                            <span>Yosh: {{ candidate.age }}</span>
+                        </div>
+                        <div class="candidate-detail">
+                            <i class="fas fa-school"></i>
+                            <span>Sinf: {{ candidate.class_ }}</span>
+                        </div>
+                        <div class="candidate-detail">
+                            <i class="fas fa-target"></i>
+                            <span>Maqsad: {{ candidate.goal }}</span>
+                        </div>
+                    </div>
+                </div>
+                <img src="{{ url_for('static', filename='candidates/' + (candidate.photo if candidate.photo else 'default.jpg')) }}"
+                     alt="{{ candidate.name }}" class="candidate-photo">
+            </div>
+            {% endfor %}
+        </div>
+
+        <!-- Voting Section -->
+        <div class="container">
+            <h2 class="section-title">
+                <i class="fas fa-vote-yea"></i>
+                Ovoz berish
+            </h2>
+
+            {% if message %}
+            <div class="message">{{ message }}</div>
+            {% endif %}
+
+            <form method="POST">
+                <div class="form-group">
+                    <label for="voter_id" class="form-label">
+                        <i class="fas fa-id-card"></i>
+                        ID raqamingizni kiriting:
+                    </label>
+                    <input type="text"
+                           name="voter_id"
+                           id="voter_id"
+                           class="form-input"
+                           placeholder="Masalan: 12345"
+                           required>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">
+                        <i class="fas fa-hand-point-right"></i>
+                        Nomzodni tanlang:
+                    </label>
+                    {% for candidate in candidates_info %}
+                    <div class="radio-option" onclick="selectRadio(this, 'candidate_{{ loop.index0 }}')">
+                        <input type="radio"
+                               name="candidate"
+                               value="{{ candidate.name }}"
+                               id="candidate_{{ loop.index0 }}"
+                               class="radio-input"
+                               required>
+                        <label for="candidate_{{ loop.index0 }}" class="radio-label">
+                            {{ candidate.name }}
+                        </label>
+                    </div>
+                    {% endfor %}
+                </div>
+
+                <button type="submit" class="submit-btn">
+                    <i class="fas fa-check-circle"></i>
+                    Ovoz berish
+                </button>
+            </form>
+
+            <a href="{{ url_for('results') }}" class="view-results">
+                <i class="fas fa-chart-bar"></i>
+                Natijalarni ko'rish
+            </a>
+        </div>
+    </main>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuIcon = document.getElementById('menuIcon');
+
+            mobileNav.classList.toggle('show');
+
+            if (mobileNav.classList.contains('show')) {
+                menuIcon.className = 'fas fa-times';
+            } else {
+                menuIcon.className = 'fas fa-bars';
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const navbar = document.getElementById('navbar');
+            const themeIcon = document.getElementById('themeIcon');
+            const mobileThemeIcon = document.getElementById('mobileThemeIcon');
+
+            body.classList.toggle('dark-mode');
+            navbar.classList.toggle('dark');
+
+            const isDark = body.classList.contains('dark-mode');
+
+            if (isDark) {
+                themeIcon.className = 'fas fa-sun';
+                mobileThemeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                mobileThemeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Radio button selection
+        function selectRadio(element, radioId) {
+            // Remove selected class from all radio options
+            document.querySelectorAll('.radio-option').forEach(option => {
+                option.classList.remove('selected');
+            });
+
+            // Add selected class to clicked option
+            element.classList.add('selected');
+
+            // Check the radio button
+            document.getElementById(radioId).checked = true;
+        }
+
+        // Load saved theme
+        window.addEventListener('load', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('navbar').classList.add('dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+                document.getElementById('mobileThemeIcon').className = 'fas fa-sun';
+            }
+        });
+
+        // Add stagger animation to candidate cards
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.candidate-option');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+
+            if (!menuBtn.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.remove('show');
+                document.getElementById('menuIcon').className = 'fas fa-bars';
+            }
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const mobileNav = document.getElementById('mobileNav');
+                mobileNav.classList.remove('show');
+                document.getElementById('menuIcon').className = 'fas fa-bars';
+            });
+        });
+
+        // Form validation and enhancement
+        document.querySelector('form').addEventListener('submit', function(e) {
+            const voterId = document.getElementById('voter_id').value.trim();
+            const selectedCandidate = document.querySelector('input[name="candidate"]:checked');
+
+            if (!voterId) {
+                e.preventDefault();
+                alert('Iltimos, ID raqamingizni kiriting!');
+                return;
+            }
+
+            if (!selectedCandidate) {
+                e.preventDefault();
+                alert('Iltimos, nomzodni tanlang!');
+                return;
+            }
+
+            // Add loading state to submit button
+            const submitBtn = document.querySelector('.submit-btn');
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Ovoz berilmoqda...';
+            submitBtn.disabled = true;
+        });
+
+        // Auto-focus on ID input
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('voter_id').focus();
+        });
+    </script>
+</body>
+</html>
