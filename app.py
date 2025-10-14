@@ -121,7 +121,7 @@ def faxirlarimiz():
         return f"<h3 style='color:red'>Xato: {e}</h3>"
 
 # 🗳️ Ovoz berish sahifasi
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/vote', methods=['GET', 'POST'])
 def vote():
     try:
         message = ''
@@ -135,12 +135,7 @@ def vote():
                         row['name'], row['age'], row['class'], row['goal'], row['photo']
                     ))
 
-        if request.method == 'GET':
-            ip = request.headers.get('X-Forwarded-For', request.remote_addr)
-            timestamp = datetime.now().strftime('%Y-%m-%d %H:%M:%S')
-            with open(IP_LOG_FILE, 'a', newline='', encoding='utf-8') as f:
-                writer = csv.writer(f)
-                writer.writerow([timestamp, ip, '/vote'])
+        
 
         if request.method == 'POST':
             voter_id = request.form['voter_id'].strip()
