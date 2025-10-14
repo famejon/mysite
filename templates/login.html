@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Admin Kirish</title>
+    <meta charset="UTF-8">
+</head>
+<body style="text-align: center;">
+    <h1>🔐 Admin panelga kirish</h1>
+    {% if error %}
+        <p style="color: red;"><strong>{{ error }}</strong></p>
+    {% endif %}
+    <form method="POST">
+        <label>Parol kiriting:</label><br>
+        <input type="password" name="password" required><br><br>
+        <button type="submit">Kirish</button>
+    </form>
+</body>
+</html>
