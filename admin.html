@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Panel</title>
+    <style>
+        :root {
+            --bg-color: #f3f4f6;
+            --card-color: #ffffff;
+            --text-color: #333;
+            --nav-color: #2c3e50;
+            --link-color: #3498db;
+            --btn-color: #3498db;
+            --btn-hover: #2980b9;
+            --danger-color: #e74c3c;
+            --danger-hover: #c0392b;
+            --message-bg: #d1fae5;
+            --message-text: #065f46;
+        }
+
+        body.dark-mode {
+            --bg-color: #0f172a;
+            --card-color: #1e293b;
+            --text-color: #e2e8f0;
+            --nav-color: #1e293b;
+            --link-color: #93c5fd;
+            --btn-color: #2563eb;
+            --btn-hover: #1d4ed8;
+            --danger-color: #b91c1c;
+            --danger-hover: #991b1b;
+            --message-bg: #334155;
+            --message-text: #38bdf8;
+        }
+
+        body {
+            font-family: 'Segoe UI', sans-serif;
+            background: var(--bg-color);
+            margin: 0;
+            padding: 0;
+            color: var(--text-color);
+            transition: 0.3s ease;
+        }
+
+        .navbar {
+            background-color: var(--nav-color);
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 20px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+
+        .navbar .logo {
+            display: flex;
+            align-items: center;
+        }
+
+        .navbar .logo img {
+            height: 40px;
+            width: 40px;
+            margin-right: 10px;
+        }
+
+        .navbar h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .navbar .links a {
+            color: white;
+            margin-left: 15px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .navbar .links a:hover {
+            text-decoration: underline;
+        }
+
+        .theme-toggle {
+            margin-left: 15px;
+            padding: 5px 10px;
+            border: 2px solid white;
+            background-color: transparent;
+            color: white;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        h1 {
+            text-align: center;
+            margin: 30px 0 10px;
+            font-size: 30px;
+        }
+
+        form {
+            background: var(--card-color);
+            margin: 20px auto;
+            padding: 20px;
+            width: 90%;
+            max-width: 450px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-radius: 12px;
+        }
+
+        form h3 {
+            margin-bottom: 15px;
+            color: var(--text-color);
+        }
+
+        input, select, button {
+            margin: 10px 0;
+            padding: 10px;
+            width: 90%;
+            border-radius: 6px;
+            border: 1px solid #ccc;
+            font-size: 16px;
+        }
+
+        input:focus, select:focus {
+            outline: 2px solid var(--btn-color);
+        }
+
+        button {
+            background-color: var(--btn-color);
+            color: white;
+            cursor: pointer;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        button:hover {
+            background-color: var(--btn-hover);
+        }
+
+        .danger {
+            background-color: var(--danger-color);
+        }
+
+        .danger:hover {
+            background-color: var(--danger-hover);
+        }
+
+        a {
+            display: inline-block;
+            margin-top: 20px;
+            text-decoration: none;
+            color: var(--link-color);
+            font-weight: bold;
+        }
+
+        .message {
+            margin: 20px auto;
+            background-color: var(--message-bg);
+            color: var(--message-text);
+            padding: 10px;
+            width: 80%;
+            max-width: 400px;
+            border-radius: 6px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Navbar -->
+<div class="navbar">
+    <div class="logo">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo">
+        <h2>Election</h2>
+    </div>
+    <div class="links">
+        <a href="{{ url_for('vote') }}">⬅️ Ovoz berish</a>
+        <a href="{{ url_for('logout') }}">🔒 Logout</a>
+        <button class="theme-toggle" onclick="toggleTheme()">🌓</button>
+    </div>
+</div>
+
+<h1>⚙️ Admin Panel</h1>
+
+{% if message %}
+    <div class="message">{{ message }}</div>
+{% endif %}
+
+<form method="POST">
+    <h3>➕ Nomzod qo‘shish</h3>
+    <input type="text" name="name" placeholder="Nomzod ismi" required>
+    <input type="hidden" name="action" value="add">
+    <button type="submit">Qo‘shish</button>
+</form>
+
+<form method="POST">
+    <h3>❌ Nomzod o‘chirish</h3>
+    <select name="name">
+        {% for candidate in candidates %}
+            <option value="{{ candidate }}">{{ candidate }}</option>
+        {% endfor %}
+    </select>
+    <input type="hidden" name="action" value="delete">
+    <button type="submit" class="danger">O‘chirish</button>
+</form>
+
+<form method="POST">
+    <h3>✏️ Nomzod tahrirlash</h3>
+    <select name="old_name">
+        {% for candidate in candidates %}
+            <option value="{{ candidate }}">{{ candidate }}</option>
+        {% endfor %}
+    </select>
+    <input type="text" name="name" placeholder="Yangi nomzod ismi" required>
+    <input type="hidden" name="action" value="edit">
+    <button type="submit">Tahrirlash</button>
+</form>
+
+<form method="POST">
+    <h3>🧹 Barcha ovozlarni tozalash</h3>
+    <input type="hidden" name="action" value="clear_votes">
+    <button type="submit" class="danger">Tozalash</button>
+</form>
+
+<script>
+    function toggleTheme() {
+        const body = document.body;
+        body.classList.toggle('dark-mode');
+        localStorage.setItem("theme", body.classList.contains("dark-mode") ? "dark" : "light");
+    }
+
+    // Load saved theme on page load
+    window.onload = function () {
+        if (localStorage.getItem("theme") === "dark") {
+            document.body.classList.add("dark-mode");
+        }
+    };
+</script>
+
+</body>
+</html>
