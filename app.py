@@ -42,7 +42,7 @@ class CandidateInfo:
         self.photo = photo
 
 # 🏫 Bosh sahifa (asosiy route sifatida)
-@app.route('/')
+@app.route('/home')
 def home():
     try:
         candidates = []
