@@ -1,0 +1,994 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Saylov natijalari – Quvasoy Ixtisoslashtirilgan maktabi</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo-removebg-preview.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e8f5e8 100%);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bounceSlow {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
+        }
+
+        @keyframes scaleIn {
+            from {
+                opacity: 0;
+                transform: scale(0.9);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
+        }
+
+        @keyframes progressBar {
+            from {
+                width: 0%;
+            }
+            to {
+                width: var(--progress-width);
+            }
+        }
+
+        @keyframes sparkle {
+            0%, 100% { transform: scale(1) rotate(0deg); }
+            50% { transform: scale(1.2) rotate(180deg); }
+        }
+
+        .animate-fade-in {
+            animation: fadeIn 0.8s ease-out forwards;
+        }
+
+        .animate-slide-up {
+            animation: slideUp 0.8s ease-out forwards;
+        }
+
+        .animate-slide-down {
+            animation: slideDown 0.3s ease-out forwards;
+        }
+
+        .animate-bounce-slow {
+            animation: bounceSlow 3s ease-in-out infinite;
+        }
+
+        .animate-pulse {
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .animate-scale-in {
+            animation: scaleIn 0.6s ease-out forwards;
+        }
+
+        .animate-sparkle {
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        /* Navbar */
+        .navbar {
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.dark {
+            background: rgba(31, 41, 55, 0.95);
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .dark .logo-text p {
+            color: #9ca3af;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark .theme-toggle {
+            color: #fbbf24;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+        }
+
+        .dark .mobile-menu-btn {
+            color: #d1d5db;
+        }
+
+        .mobile-nav {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: #4b5563;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .mobile-nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .mobile-nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .dark .page-subtitle {
+            color: #9ca3af;
+        }
+
+        /* Results Container */
+        .results-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 1.5rem;
+            padding: 0 1rem 3rem;
+        }
+
+        /* Result Card */
+        .result-card {
+            position: relative;
+            padding: 1.5rem;
+            border-radius: 1rem;
+            max-width: 500px;
+            width: 100%;
+            text-align: center;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out;
+            overflow: hidden;
+            border: 2px solid transparent;
+        }
+
+        .result-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 15px 30px -5px rgba(0, 0, 0, 0.2);
+        }
+
+        .result-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.5), transparent);
+            animation: progressBar 2s ease-out;
+        }
+
+        /* First Place */
+        .result-card.first {
+            background: linear-gradient(135deg, #d1fae5, #a7f3d0);
+            color: #065f46;
+            font-size: 1.375rem;
+            border-color: #10b981;
+            position: relative;
+        }
+
+        .result-card.first::after {
+            content: '👑';
+            position: absolute;
+            top: -10px;
+            right: 20px;
+            font-size: 2rem;
+            animation: sparkle 2s ease-in-out infinite;
+        }
+
+        /* Second Place */
+        .result-card.second {
+            background: linear-gradient(135deg, #fef3c7, #fde68a);
+            color: #92400e;
+            font-size: 1.25rem;
+            border-color: #f59e0b;
+        }
+
+        /* Third Place */
+        .result-card.third {
+            background: linear-gradient(135deg, #e0e7ff, #c7d2fe);
+            color: #3730a3;
+            font-size: 1.125rem;
+            border-color: #6366f1;
+        }
+
+        /* Other Places */
+        .result-card.other {
+            background: linear-gradient(135deg, #f8fafc, #f1f5f9);
+            color: #374151;
+            font-size: 1rem;
+            border-color: #d1d5db;
+        }
+
+        .dark .result-card.other {
+            background: linear-gradient(135deg, #4b5563, #374151);
+            color: #f3f4f6;
+            border-color: #6b7280;
+        }
+
+        /* Medal Icons */
+        .medal-icon {
+            font-size: 2rem;
+            margin-right: 0.5rem;
+            display: inline-block;
+            animation: bounceSlow 3s ease-in-out infinite;
+        }
+
+        /* Vote Count */
+        .vote-count {
+            font-weight: 700;
+            font-size: 1.1em;
+        }
+
+        /* Progress Bar */
+        .progress-container {
+            width: 100%;
+            height: 8px;
+            background: rgba(0, 0, 0, 0.1);
+            border-radius: 4px;
+            margin-top: 0.75rem;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 4px;
+            transition: width 2s ease-out;
+            animation: progressBar 2s ease-out;
+        }
+
+        .result-card.first .progress-bar {
+            background: linear-gradient(90deg, #10b981, #059669);
+        }
+
+        .result-card.second .progress-bar {
+            background: linear-gradient(90deg, #f59e0b, #d97706);
+        }
+
+        .result-card.third .progress-bar {
+            background: linear-gradient(90deg, #6366f1, #4f46e5);
+        }
+
+        .result-card.other .progress-bar {
+            background: linear-gradient(90deg, #6b7280, #4b5563);
+        }
+
+        /* No Results */
+        .no-results {
+            text-align: center;
+            padding: 3rem 1rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .no-results-icon {
+            font-size: 4rem;
+            color: #9ca3af;
+            margin-bottom: 1rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .no-results-text {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .dark .no-results-text {
+            color: #9ca3af;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin: 2rem auto;
+            padding: 0.75rem 1.5rem;
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(16, 185, 129, 0.1));
+            color: #3b82f6;
+            text-decoration: none;
+            border-radius: 0.75rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            border: 2px solid transparent;
+            text-align: center;
+        }
+
+        .back-link:hover {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            transform: translateY(-2px);
+            box-shadow: 0 8px 20px -5px rgba(59, 130, 246, 0.3);
+        }
+
+        .dark .back-link {
+            color: #60a5fa;
+            background: linear-gradient(135deg, rgba(96, 165, 250, 0.1), rgba(52, 211, 153, 0.1));
+        }
+
+        /* Back to Top */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.25);
+            transition: all 0.3s ease;
+            z-index: 1000;
+            display: none;
+            animation: bounceSlow 3s ease-in-out infinite;
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+        }
+
+        .back-to-top.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Statistics */
+        .stats-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            text-align: center;
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+            animation: slideUp 0.8s ease-out;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -10px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .stat-card {
+            background: #374151;
+            border: 1px solid #4b5563;
+        }
+
+        .stat-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            color: white;
+            font-size: 1.5rem;
+        }
+
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #111827;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark .stat-value {
+            color: white;
+        }
+
+        .stat-label {
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .dark .stat-label {
+            color: #9ca3af;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .result-card {
+                padding: 1rem;
+            }
+
+            .result-card.first {
+                font-size: 1.25rem;
+            }
+
+            .result-card.second {
+                font-size: 1.125rem;
+            }
+
+            .medal-icon {
+                font-size: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0 0.5rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .result-card {
+                padding: 1rem;
+                font-size: 0.875rem;
+            }
+
+            .result-card.first {
+                font-size: 1.125rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #1d4ed8, #059669);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>QUVASOY IM</h1>
+                    <p>Ixtisoslashtirilgan maktab</p>
+                </div>
+            </div>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="nav-link">
+                    <i class="fas fa-vote-yea"></i>
+                    <span class="nav-text">Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="nav-link active">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="nav-text">Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="nav-link">
+                    <i class="fas fa-star"></i>
+                    <span class="nav-text">Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span class="nav-text">Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="nav-text">Yordam</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars" id="menuIcon"></i>
+            </button>
+
+            <div class="mobile-nav" id="mobileNav">
+                <a href="{{ url_for('home') }}" class="mobile-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="mobile-nav-link">
+                    <i class="fas fa-vote-yea"></i>
+                    <span>Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="mobile-nav-link active">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="mobile-nav-link">
+                    <i class="fas fa-star"></i>
+                    <span>Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Yordam</span>
+                </a>
+                <button class="mobile-nav-link" onclick="toggleTheme()" style="border: none; background: none; width: 100%; text-align: left;">
+                    <i class="fas fa-moon" id="mobileThemeIcon"></i>
+                    <span>Mavzu o'zgartirish</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">📊 Saylov natijalari</h1>
+            <p class="page-subtitle">Real vaqt rejimida yangilanuvchi natijalar</p>
+        </div>
+
+        {% if vote_counts %}
+            <!-- Statistics -->
+            <div class="stats-container">
+                <div class="stat-card" style="animation-delay: 0s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-value">{{ vote_counts.values() | sum }}</div>
+                    <div class="stat-label">Jami ovozlar</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.1s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-user-friends"></i>
+                    </div>
+                    <div class="stat-value">{{ vote_counts | length }}</div>
+                    <div class="stat-label">Nomzodlar soni</div>
+                </div>
+                <div class="stat-card" style="animation-delay: 0.2s;">
+                    <div class="stat-icon">
+                        <i class="fas fa-percentage"></i>
+                    </div>
+                    <div class="stat-value">
+                        {% set total_votes = vote_counts.values() | sum %}
+                        {% set max_votes = vote_counts.values() | max %}
+                        {{ "%.1f" | format((max_votes / total_votes * 100) if total_votes > 0 else 0) }}%
+                    </div>
+                    <div class="stat-label">Eng yuqori natija</div>
+                </div>
+            </div>
+
+            <!-- Results -->
+            <div class="results-container">
+                {% set sorted_votes = vote_counts.items()|sort(attribute='1', reverse=True) %}
+                {% set total_votes = vote_counts.values() | sum %}
+
+                {% for candidate, count in sorted_votes %}
+                    {% set percentage = (count / total_votes * 100) if total_votes > 0 else 0 %}
+
+                    {% if loop.index == 1 %}
+                        <div class="result-card first" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                            <span class="medal-icon">🥇</span>
+                            <span class="vote-count">{{ candidate }} — {{ count }} ta ovoz</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="--progress-width: {{ percentage }}%; width: {{ percentage }}%;"></div>
+                            </div>
+                        </div>
+                    {% elif loop.index == 2 %}
+                        <div class="result-card second" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                            <span class="medal-icon">🥈</span>
+                            <span class="vote-count">{{ candidate }} — {{ count }} ta ovoz</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="--progress-width: {{ percentage }}%; width: {{ percentage }}%;"></div>
+                            </div>
+                        </div>
+                    {% elif loop.index == 3 %}
+                        <div class="result-card third" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                            <span class="medal-icon">🥉</span>
+                            <span class="vote-count">{{ candidate }} — {{ count }} ta ovoz</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="--progress-width: {{ percentage }}%; width: {{ percentage }}%;"></div>
+                            </div>
+                        </div>
+                    {% else %}
+                        <div class="result-card other" style="animation-delay: {{ loop.index0 * 0.1 }}s;">
+                            <span class="medal-icon">🏅</span>
+                            <span class="vote-count">{{ candidate }} — {{ count }} ta ovoz</span>
+                            <div class="progress-container">
+                                <div class="progress-bar" style="--progress-width: {{ percentage }}%; width: {{ percentage }}%;"></div>
+                            </div>
+                        </div>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        {% else %}
+            <!-- No Results -->
+            <div class="no-results">
+                <div class="no-results-icon">
+                    <i class="fas fa-inbox"></i>
+                </div>
+                <p class="no-results-text">Hozircha hech kim ovoz bermagan.</p>
+            </div>
+        {% endif %}
+
+        <!-- Back Link -->
+        <div style="text-align: center;">
+            <a href="{{ url_for('vote') }}" class="back-link">
+                <i class="fas fa-arrow-left"></i>
+                Ovoz berish sahifasiga qaytish
+            </a>
+        </div>
+    </main>
+
+    <!-- Back to Top Button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuIcon = document.getElementById('menuIcon');
+
+            mobileNav.classList.toggle('show');
+
+            if (mobileNav.classList.contains('show')) {
+                menuIcon.className = 'fas fa-times';
+            } else {
+                menuIcon.className = 'fas fa-bars';
+            }
+        }
+
+        // Theme toggle
+        function toggleTheme() {
+            const body = document.body;
+            const navbar = document.getElementById('navbar');
+            const themeIcon = document.getElementById('themeIcon');
+            const mobileThemeIcon = document.getElementById('mobileThemeIcon');
+
+            body.classList.toggle('dark-mode');
+            navbar.classList.toggle('dark');
+
+            const isDark = body.classList.contains('dark-mode');
+
+            if (isDark) {
+                themeIcon.className = 'fas fa-sun';
+                mobileThemeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                mobileThemeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Back to top functionality
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Load saved theme
+        window.addEventListener('load', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('navbar').classList.add('dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+                document.getElementById('mobileThemeIcon').className = 'fas fa-sun';
+            }
+        });
+
+        // Add stagger animation to result cards
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.result-card, .stat-card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+
+            // Animate progress bars
+            setTimeout(() => {
+                const progressBars = document.querySelectorAll('.progress-bar');
+                progressBars.forEach(bar => {
+                    const width = bar.style.getPropertyValue('--progress-width');
+                    bar.style.width = width;
+                });
+            }, 500);
+        });
+
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+
+            if (!menuBtn.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.remove('show');
+                document.getElementById('menuIcon').className = 'fas fa-bars';
+            }
+        });
+
+        document.querySelectorAll('.mobile-nav-link').forEach(link => {
+            link.addEventListener('click', function() {
+                const mobileNav = document.getElementById('mobileNav');
+                mobileNav.classList.remove('show');
+                document.getElementById('menuIcon').className = 'fas fa-bars';
+            });
+        });
+
+        // Auto refresh results every 30 seconds
+        setInterval(function() {
+            if (!document.hidden) {
+                location.reload();
+            }
+        }, 30000);
+
+        // Add click sound effect (optional)
+        document.querySelectorAll('.result-card').forEach(card => {
+            card.addEventListener('click', function() {
+                this.style.transform = 'scale(0.98)';
+                setTimeout(() => {
+                    this.style.transform = '';
+                }, 150);
+            });
+        });
+    </script>
+</body>
+</html>
