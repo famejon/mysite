@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="uz">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Faxrlarimiz – Quvasoy Ixtisoslashtirilgan maktabi</title>
+    <link rel="icon" type="image/png" href="{{ url_for('static', filename='logo-removebg-preview.png') }}">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background: linear-gradient(135deg, #f0f8ff 0%, #e8f5e8 100%);
+            transition: all 0.3s ease;
+            min-height: 100vh;
+            padding-top: 4rem;
+        }
+
+        /* Dark mode */
+        body.dark-mode {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            color: #f0f0f0;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes pulse {
+            0%, 100% {
+                transform: scale(1);
+            }
+            50% {
+                transform: scale(1.05);
+            }
+        }
+
+        /* Navbar */
+        .navbar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(59, 130, 246, 0.1);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+            transition: all 0.3s ease;
+        }
+
+        .navbar.dark {
+            background: rgba(31, 41, 55, 0.95);
+            border-bottom: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        .navbar-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 1rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 4rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            animation: fadeIn 0.8s ease-out;
+            text-decoration: none;
+            cursor: pointer;
+        }
+
+        .logo-icon {
+            width: 2.5rem;
+            height: 2.5rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .logo-text h1 {
+            font-size: 1.125rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .logo-text p {
+            font-size: 0.75rem;
+            color: #6b7280;
+        }
+
+        .dark .logo-text p {
+            color: #9ca3af;
+        }
+
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.5rem 0.75rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            font-weight: 500;
+            font-size: 0.875rem;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+            transform: scale(1.05);
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        .theme-toggle {
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.2s ease;
+        }
+
+        .theme-toggle:hover {
+            background: rgba(59, 130, 246, 0.1);
+            transform: scale(1.1);
+        }
+
+        .dark .theme-toggle {
+            color: #fbbf24;
+        }
+
+        .mobile-menu-btn {
+            display: none;
+            padding: 0.5rem;
+            border-radius: 0.5rem;
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #4b5563;
+        }
+
+        .dark .mobile-menu-btn {
+            color: #d1d5db;
+        }
+
+        .mobile-nav {
+            display: none;
+            padding: 1rem 0;
+        }
+
+        .mobile-nav.show {
+            display: block;
+            animation: slideDown 0.3s ease-out;
+        }
+
+        .mobile-nav-link {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem 1rem;
+            border-radius: 0.5rem;
+            text-decoration: none;
+            color: #4b5563;
+            transition: all 0.2s ease;
+            margin-bottom: 0.5rem;
+        }
+
+        .mobile-nav-link:hover {
+            background: rgba(59, 130, 246, 0.1);
+            color: #3b82f6;
+        }
+
+        .mobile-nav-link.active {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            color: white;
+        }
+
+        .dark .mobile-nav-link {
+            color: #d1d5db;
+        }
+
+        .dark .mobile-nav-link:hover {
+            background: rgba(75, 85, 99, 0.5);
+            color: white;
+        }
+
+        /* Main Content */
+        .main-content {
+            max-width: 1200px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+
+        .page-header {
+            text-align: center;
+            margin-bottom: 3rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .page-title {
+            font-size: 2.5rem;
+            font-weight: 700;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 0.5rem;
+        }
+
+        .page-subtitle {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .dark .page-subtitle {
+            color: #9ca3af;
+        }
+
+        /* Cards */
+        .card-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 2rem;
+            margin-bottom: 3rem;
+        }
+
+        .card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            transition: all 0.3s ease;
+            animation: fadeIn 0.8s ease-out;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .dark .card {
+            background: rgba(31, 41, 55, 0.9);
+            border: 1px solid rgba(75, 85, 99, 0.3);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .card-icon {
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 0.75rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.25rem;
+        }
+
+        .card-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .dark .card-title {
+            color: #f9fafb;
+        }
+
+        .card-body {
+            padding: 0;
+        }
+
+        .achievement-info {
+            display: grid;
+            gap: 0.75rem;
+        }
+
+        .info-item {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            padding: 0.75rem;
+            background: rgba(59, 130, 246, 0.05);
+            border-radius: 0.5rem;
+            border-left: 3px solid #3b82f6;
+        }
+
+        .dark .info-item {
+            background: rgba(75, 85, 99, 0.3);
+        }
+
+        .info-icon {
+            width: 1.5rem;
+            height: 1.5rem;
+            color: #3b82f6;
+            flex-shrink: 0;
+        }
+
+        .info-content {
+            flex: 1;
+        }
+
+        .info-label {
+            font-size: 0.75rem;
+            font-weight: 500;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 0.25rem;
+        }
+
+        .dark .info-label {
+            color: #9ca3af;
+        }
+
+        .info-value {
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .dark .info-value {
+            color: #f9fafb;
+        }
+
+        .comment-section {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.05);
+            border-radius: 0.5rem;
+            border-left: 3px solid #10b981;
+        }
+
+        .dark .comment-section {
+            background: rgba(75, 85, 99, 0.3);
+        }
+
+        .comment-text {
+            font-size: 0.875rem;
+            color: #374151;
+            font-style: italic;
+        }
+
+        .dark .comment-text {
+            color: #d1d5db;
+        }
+
+        /* Empty state */
+        .empty-state {
+            text-align: center;
+            padding: 4rem 2rem;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        .empty-icon {
+            font-size: 4rem;
+            color: #d1d5db;
+            margin-bottom: 1rem;
+        }
+
+        .dark .empty-icon {
+            color: #6b7280;
+        }
+
+        .empty-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 0.5rem;
+        }
+
+        .dark .empty-title {
+            color: #f3f4f6;
+        }
+
+        .empty-text {
+            font-size: 1.125rem;
+            color: #6b7280;
+        }
+
+        .dark .empty-text {
+            color: #9ca3af;
+        }
+
+        /* Back to top button */
+        .back-to-top {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 3rem;
+            height: 3rem;
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            font-size: 1.25rem;
+            cursor: pointer;
+            opacity: 0;
+            visibility: hidden;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+
+        .back-to-top.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .back-to-top:hover {
+            transform: scale(1.1);
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                display: none;
+            }
+
+            .mobile-menu-btn {
+                display: block;
+            }
+
+            .page-title {
+                font-size: 2rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1.5rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .main-content {
+                padding: 0 0.5rem;
+            }
+
+            .page-title {
+                font-size: 1.75rem;
+            }
+
+            .card {
+                padding: 1rem;
+            }
+
+            .card-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .dark ::-webkit-scrollbar-track {
+            background: #374151;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: linear-gradient(135deg, #3b82f6, #10b981);
+            border-radius: 4px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(135deg, #1d4ed8, #059669);
+        }
+    </style>
+</head>
+<body>
+    <!-- Navbar -->
+    <nav class="navbar" id="navbar">
+        <div class="navbar-container">
+            <!--  Made logo clickable to redirect to home page -->
+            <a href="{{ url_for('home') }}" class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-graduation-cap"></i>
+                </div>
+                <div class="logo-text">
+                    <h1>QUVASOY IM</h1>
+                    <p>Ixtisoslashtirilgan maktab</p>
+                </div>
+            </a>
+
+            <div class="nav-links" id="navLinks">
+                <a href="{{ url_for('home') }}" class="nav-link">
+                    <i class="fas fa-home"></i>
+                    <span class="nav-text">Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="nav-link">
+                    <i class="fas fa-vote-yea"></i>
+                    <span class="nav-text">Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span class="nav-text">Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="nav-link active">
+                    <i class="fas fa-star"></i>
+                    <span class="nav-text">Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span class="nav-text">Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span class="nav-text">Yordam</span>
+                </a>
+                <button class="theme-toggle" onclick="toggleDarkMode()">
+                    <i class="fas fa-moon" id="themeIcon"></i>
+                </button>
+            </div>
+
+            <button class="mobile-menu-btn" onclick="toggleMenu()">
+                <i class="fas fa-bars" id="menuIcon"></i>
+            </button>
+
+            <div class="mobile-nav" id="mobileNav">
+                <a href="{{ url_for('home') }}" class="mobile-nav-link">
+                    <i class="fas fa-home"></i>
+                    <span>Bosh sahifa</span>
+                </a>
+                <a href="{{ url_for('vote') }}" class="mobile-nav-link">
+                    <i class="fas fa-vote-yea"></i>
+                    <span>Ovoz berish</span>
+                </a>
+                <a href="{{ url_for('results') }}" class="mobile-nav-link">
+                    <i class="fas fa-chart-bar"></i>
+                    <span>Natijalar</span>
+                </a>
+                <a href="{{ url_for('faxirlarimiz') }}" class="mobile-nav-link active">
+                    <i class="fas fa-star"></i>
+                    <span>Faxrlarimiz</span>
+                </a>
+                <a href="https://t.me/famejon" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-comments"></i>
+                    <span>Takliflar</span>
+                </a>
+                <a href="https://t.me/election_qollanma/1" target="_blank" class="mobile-nav-link">
+                    <i class="fas fa-question-circle"></i>
+                    <span>Yordam</span>
+                </a>
+                <button class="mobile-nav-link" onclick="toggleDarkMode()" style="border: none; background: none; width: 100%; text-align: left;">
+                    <i class="fas fa-moon" id="mobileThemeIcon"></i>
+                    <span>Mavzu o'zgartirish</span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1 class="page-title">🌟 Faxrlarimiz</h1>
+            <p class="page-subtitle">Maktabimizning g'urur manbai bo'lgan yutuqlar</p>
+        </div>
+
+        <!--  Updated content section to work with CSV data from Flask backend -->
+        {% if data %}
+            <div class="card-grid">
+                {% for item in data %}
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-icon">
+                            <i class="fas fa-trophy"></i>
+                        </div>
+                        <h3 class="card-title">{{ item.name }}</h3>
+                    </div>
+                    <div class="card-body">
+                        <div class="achievement-info">
+                            <div class="info-item">
+                                <i class="fas fa-medal info-icon"></i>
+                                <div class="info-content">
+                                    <div class="info-label">Yutuq</div>
+                                    <div class="info-value">{{ item.success }}</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-calendar info-icon"></i>
+                                <div class="info-content">
+                                    <div class="info-label">Yil</div>
+                                    <div class="info-value">{{ item.year }}</div>
+                                </div>
+                            </div>
+                            <div class="info-item">
+                                <i class="fas fa-layer-group info-icon"></i>
+                                <div class="info-content">
+                                    <div class="info-label">Daraja</div>
+                                    <div class="info-value">{{ item.level }}</div>
+                                </div>
+                            </div>
+                        </div>
+                        {% if item.comment %}
+                        <div class="comment-section">
+                            <div class="info-label">Izoh</div>
+                            <div class="comment-text">{{ item.comment }}</div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <div class="empty-icon">
+                    <i class="fas fa-star"></i>
+                </div>
+                <h3 class="empty-title">Hozircha faxrlarimiz yo'q</h3>
+                <p class="empty-text">Tez orada maktabimizning yutuqlari bu yerda ko'rsatiladi</p>
+            </div>
+        {% endif %}
+    </main>
+
+    <!-- Back to top button -->
+    <button class="back-to-top" id="backToTop" onclick="scrollToTop()">
+        <i class="fas fa-chevron-up"></i>
+    </button>
+
+    <script>
+        // Mobile menu toggle
+        function toggleMenu() {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuIcon = document.getElementById('menuIcon');
+
+            mobileNav.classList.toggle('show');
+
+            if (mobileNav.classList.contains('show')) {
+                menuIcon.className = 'fas fa-times';
+            } else {
+                menuIcon.className = 'fas fa-bars';
+            }
+        }
+
+        // Theme toggle
+        function toggleDarkMode() {
+            const body = document.body;
+            const navbar = document.getElementById('navbar');
+            const themeIcon = document.getElementById('themeIcon');
+            const mobileThemeIcon = document.getElementById('mobileThemeIcon');
+
+            body.classList.toggle('dark-mode');
+            navbar.classList.toggle('dark');
+
+            const isDark = body.classList.contains('dark-mode');
+
+            if (isDark) {
+                themeIcon.className = 'fas fa-sun';
+                mobileThemeIcon.className = 'fas fa-sun';
+                localStorage.setItem('theme', 'dark');
+            } else {
+                themeIcon.className = 'fas fa-moon';
+                mobileThemeIcon.className = 'fas fa-moon';
+                localStorage.setItem('theme', 'light');
+            }
+        }
+
+        // Back to top functionality
+        function scrollToTop() {
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Show/hide back to top button
+        window.addEventListener('scroll', function() {
+            const backToTop = document.getElementById('backToTop');
+            if (window.scrollY > 300) {
+                backToTop.classList.add('show');
+            } else {
+                backToTop.classList.remove('show');
+            }
+        });
+
+        // Load saved theme
+        window.addEventListener('load', function() {
+            const savedTheme = localStorage.getItem('theme');
+            if (savedTheme === 'dark') {
+                document.body.classList.add('dark-mode');
+                document.getElementById('navbar').classList.add('dark');
+                document.getElementById('themeIcon').className = 'fas fa-sun';
+                document.getElementById('mobileThemeIcon').className = 'fas fa-sun';
+            }
+        });
+
+        // Add stagger animation to cards
+        window.addEventListener('load', function() {
+            const cards = document.querySelectorAll('.card');
+            cards.forEach((card, index) => {
+                card.style.animationDelay = `${index * 0.1}s`;
+            });
+        });
+
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', function(event) {
+            const mobileNav = document.getElementById('mobileNav');
+            const menuBtn = document.querySelector('.mobile-menu-btn');
+
+            if (!menuBtn.contains(event.target) && !mobileNav.contains(event.target)) {
+                mobileNav.classList.remove('show');
+                document.getElementById('menuIcon').className = 'fas fa-bars';
+            }
+        });
+    </script>
+</body>
+</html>
