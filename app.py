@@ -7,15 +7,19 @@ from datetime import datetime
 app = Flask(__name__)
 app.secret_key = 'famejon'
 
-VOTES_FILE = 'votes.csv'
-CANDIDATES_FILE = 'candidates.csv'
-VOTERS_FILE = 'voter_ids.csv'
-CANDIDATES_INFO_FILE = 'nomzodlar_malumot.csv'
-IP_LOG_FILE = 'ip_log.csv'
-NEWS_FILE = 'news.csv'
+# 🔧 Fayl yo‘llarini har doim haqiqiy joylashuvdan olish
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+VOTES_FILE = os.path.join(BASE_DIR, 'votes.csv')
+CANDIDATES_FILE = os.path.join(BASE_DIR, 'candidates.csv')
+VOTERS_FILE = os.path.join(BASE_DIR, 'voter_ids.csv')
+CANDIDATES_INFO_FILE = os.path.join(BASE_DIR, 'nomzodlar_malumot.csv')
+IP_LOG_FILE = os.path.join(BASE_DIR, 'ip_log.csv')
+NEWS_FILE = os.path.join(BASE_DIR, 'news.csv')
+FAXIRLAR_FILE = os.path.join(BASE_DIR, 'faxirlar.csv')
 ADMIN_PASSWORD = 'fameadmin'
 
-# Fayllar mavjud bo‘lmasa, yaratish
+# 🧾 Fayllar mavjud bo‘lmasa, yaratish
 for file_path, header in [
     (VOTES_FILE, ['id', 'candidate']),
     (CANDIDATES_FILE, ['name']),
@@ -28,6 +32,7 @@ for file_path, header in [
             writer = csv.writer(f)
             writer.writerow(header)
 
+# 👤 Nomzodlar uchun class
 class CandidateInfo:
     def __init__(self, name, age, clas, goal, photo):
         self.name = name
@@ -36,6 +41,7 @@ class CandidateInfo:
         self.goal = goal
         self.photo = photo
 
+# 🏫 Bosh sahifa
 @app.route('/home')
 def home():
     candidates = []
@@ -58,12 +64,12 @@ def home():
         'area': "4.5 gektar",
         'teachers': 45,
         'students': 450,
-        'specialization': "Aniq va tabiy yo'nalishlar",
+        'specialization': "Aniq va tabiiy yo'nalishlar",
         'language': "Barcha darslar o'zbek tilida olib boriladi."
     }
 
     news = []
-    news_dir = 'static/news'
+    news_dir = os.path.join(BASE_DIR, 'static', 'news')
     if not os.path.exists(news_dir):
         os.makedirs(news_dir)
 
@@ -72,15 +78,10 @@ def home():
             reader = csv.DictReader(f)
             for row in reader:
                 image_filename = row.get('image', 'default.jpg')
-                image_path = f'static/news/{image_filename}'
+                image_path = os.path.join(news_dir, image_filename)
 
                 if not os.path.exists(image_path) or image_filename == '':
                     image_filename = 'default.jpg'
-                    # Create default.jpg if it doesn't exist
-                    default_path = 'static/news/default.png'
-                    if not os.path.exists(default_path):
-                        # Create a placeholder default image path
-                        image_filename = 'default.jpg'
 
                 news.append({
                     'title': row.get('title', 'Yangilik'),
@@ -89,21 +90,20 @@ def home():
                 })
 
     if not news:
-        news = [
-            {
-                'title': 'Maktab yangiliklari',
-                'content': 'Maktabimizda sodir bo\'layotgan eng so\'nggi yangiliklar va e\'lonlar.',
-                'image': 'default.jpg'
-            }
-        ]
+        news = [{
+            'title': 'Maktab yangiliklari',
+            'content': 'Maktabimizda sodir bo‘layotgan eng so‘nggi yangiliklar va e‘lonlar.',
+            'image': 'default.jpg'
+        }]
 
     return render_template('home.html', candidates=candidates, school_info=school_info, news=news)
 
+# 🏆 Faxrlar sahifasi
 @app.route("/faxirlarimiz")
 def faxirlarimiz():
     data = []
-    if os.path.exists("faxirlar.csv"):
-        with open("faxirlar.csv", newline='', encoding='utf-8') as csvfile:
+    if os.path.exists(FAXIRLAR_FILE):
+        with open(FAXIRLAR_FILE, newline='', encoding='utf-8') as csvfile:
             reader = csv.DictReader(csvfile)
             for row in reader:
                 data.append({
@@ -115,11 +115,12 @@ def faxirlarimiz():
                 })
     return render_template("faxirlarimiz.html", data=data)
 
-
+# 🗳️ Ovoz berish sahifasi
 @app.route('/', methods=['GET', 'POST'])
 def vote():
     message = ''
     candidates_info = []
+
     if os.path.exists(CANDIDATES_INFO_FILE):
         with open(CANDIDATES_INFO_FILE, newline='', encoding='utf-8') as f:
             reader = csv.DictReader(f)
@@ -141,6 +142,7 @@ def vote():
 
         with open(VOTERS_FILE, 'r', encoding='utf-8') as f:
             valid_ids = [row['id'] for row in csv.DictReader(f)]
+
         if voter_id not in valid_ids:
             message = "ID noto‘g‘ri yoki ro‘yxatda yo‘q!"
             return render_template('vote.html', candidates_info=candidates_info, message=message)
@@ -152,10 +154,12 @@ def vote():
 
         with open(VOTES_FILE, 'a', newline='', encoding='utf-8') as f:
             csv.writer(f).writerow([voter_id, candidate])
+
         message = "✅ Ovoz muvaffaqiyatli berildi!"
 
     return render_template('vote.html', candidates_info=candidates_info, message=message)
 
+# 🔐 Admin login
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
@@ -167,11 +171,13 @@ def login():
             return render_template('login.html', error="Noto'g'ri parol!")
     return render_template('login.html')
 
+# 🚪 Logout
 @app.route('/logout')
 def logout():
     session.pop('admin_logged_in', None)
     return redirect(url_for('login'))
 
+# 🧠 Admin panel
 @app.route('/admin', methods=['GET', 'POST'])
 def admin():
     if not session.get('admin_logged_in'):
@@ -224,6 +230,7 @@ def admin():
 
     return render_template('admin.html', message=message, candidates=candidates)
 
+# 📊 Natijalar
 @app.route('/results')
 def results():
     vote_counts = defaultdict(int)
