@@ -121,7 +121,7 @@ def faxirlarimiz():
         return f"<h3 style='color:red'>Xato: {e}</h3>"
 
 # 🗳️ Ovoz berish sahifasi
-@app.route('/vote', methods=['GET', 'POST'])
+@app.route('/', methods=['GET', 'POST'])
 def vote():
     try:
         message = ''
